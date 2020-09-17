@@ -10,8 +10,8 @@
 * CLR 版本 ：4.0.30319.42000
 * 作　　者 ：Kane Leung
 * 创建时间 ：2019/10/20 22:43:29
-* 更新时间 ：2019/10/20 22:43:29
-* 版 本 号 ：v1.0.0.0
+* 更新时间 ：2020/09/18 22:43:29
+* 版 本 号 ：v1.0.1.0
 *******************************************************************
 * Copyright @ Kane Leung 2019. All rights reserved.
 *******************************************************************
@@ -159,13 +159,10 @@ namespace Kane.WinForm
             base.OnActivated(e);
             foreach (Control item in HeaderPanel.Controls)
             {
-                if (!string.IsNullOrEmpty(item.Tag?.ToString()) && item.GetType().Name == "PictureBox")
+                if (!string.IsNullOrEmpty(item.Tag?.ToString()) && item is PictureBox box)
                 {
-                    if (item.Tag?.ToString() == "ICON_")//ICON图标做特殊处理
-                    {
-                        ((PictureBox)item).Image = IconImage;
-                    }
-                    else ((PictureBox)item).Image = Common.GetResourceImage($"{item.Tag?.ToString()}BLACK");
+                    if (item.Tag?.ToString() == "ICON_") box.Image = IconImage;//ICON图标做特殊处理
+                    else box.Image = Common.GetResourceImage($"{item.Tag?.ToString()}BLACK");
                 }
             }
         }
@@ -178,13 +175,10 @@ namespace Kane.WinForm
             base.OnDeactivate(e);
             foreach (Control item in HeaderPanel.Controls)
             {
-                if (!string.IsNullOrEmpty(item.Tag?.ToString()) && item.GetType().Name == "PictureBox")
+                if (!string.IsNullOrEmpty(item.Tag?.ToString()) && item is PictureBox box)
                 {
-                    if (item.Tag?.ToString() == "ICON_")//ICON图标做特殊处理
-                    {
-                        ((PictureBox)item).Image = DeactivateIconImage;
-                    }
-                    else ((PictureBox)item).Image = Common.GetResourceImage($"{item.Tag?.ToString()}GREY");
+                    if (item.Tag?.ToString() == "ICON_") box.Image = DeactivateIconImage;//ICON图标做特殊处理
+                    else box.Image = Common.GetResourceImage($"{item.Tag?.ToString()}GREY");
                 }
             }
         }
@@ -195,6 +189,7 @@ namespace Kane.WinForm
         {
             int count = 0;
             HeaderPanel.Size = new Size(this.Width - 2, 30);
+            HeaderPanel.Controls.Clear();
             HeaderPanel.SuspendLayout();
             this.SuspendLayout();
 
@@ -298,7 +293,7 @@ namespace Kane.WinForm
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true); // 禁止擦除背景.
             SetStyle(ControlStyles.DoubleBuffer, true); // 双缓冲
-            this.ResumeLayout(false);
+            this.ResumeLayout(true);
             //this.Activated += new EventHandler(this.Form_Activated);
         }
         #endregion
@@ -377,8 +372,7 @@ namespace Kane.WinForm
         {
             var temp = sender as PictureBox;
             temp.BackColor = Color.FromArgb(255, 18, 150, 219);
-            if (this.WindowState == FormWindowState.Maximized)
-                temp.Image = Common.GetResourceImage("MINIMIZE_BLACK");
+            if (this.WindowState == FormWindowState.Maximized) temp.Image = Common.GetResourceImage("MINIMIZE_BLACK");
             else temp.Image = Common.GetResourceImage("MAXIMIZE_BLACK");
         }
 

@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace Kane.WinFormTest
 {
-    public partial class MainForm : Form
+    public partial class MainForm : KaneForm
     {
         public MainForm()
         {
